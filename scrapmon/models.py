@@ -14,6 +14,7 @@ class ScrapyScript(models.Model):
     created = models.DateField(auto_now=True)
     start = models.DateField()
     end = models.DateField()
+    run_script = models.NullBooleanField(default=None)
 
     def __str__(self):
         return self.script_name
@@ -36,9 +37,7 @@ class ScrapyLog(models.Model):
 @receiver(post_save, sender=ScrapyScript)
 def scrapy_log_saved(sender, instance, created, **kwargs):
     def __runtasks(instance):
-        print('=============Install Dependency=========')
         subprocess.run('cd '+instance.project_dir+' && pip install -r ../requirements.txt', shell=True, check=False, stderr=PIPE, stdout=PIPE)
-        print('=============execute script=========')
         log = ScrapyLog(
             start = timezone.now(),
             script = instance,
@@ -58,7 +57,8 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
             log.error_message = data.stderr.splitlines()[-50:]
             log.traceback = data.stdout.splitlines()[-23:]
         log.save()
-
-    t = Thread(target=__runtasks, args=(instance,), daemon=True)
-    t.start()
+    
+    if instance.run_script:
+        t = Thread(target=__runtasks, args=(instance,), daemon=True)
+        t.start()
         
