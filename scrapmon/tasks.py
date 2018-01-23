@@ -18,7 +18,7 @@ def execute_scrapy():
             scrapylog_name = script.spider_name+"_"+str(timezone.now())
             )
         log.save()
-        command = 'cd {dir} && scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(dir=script.project_dir, spider_name=script.spider_name)
+        command = 'export SCRAPYER_ENV={env} && cd {dir} && scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(env=script.environment, dir=script.project_dir, spider_name=script.spider_name)
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
         if data.returncode == 0:
             log.success = True

@@ -5,6 +5,7 @@ from django.utils import timezone
 import subprocess
 from subprocess import PIPE, STDOUT
 from threading import Thread
+from django import forms
 
 class ScrapyScript(models.Model):
     script_name = models.CharField(max_length=250)
@@ -15,6 +16,7 @@ class ScrapyScript(models.Model):
     start = models.DateField()
     end = models.DateField()
     run_script = models.NullBooleanField(default=None)
+    enviroment = models.CharField(max_length=250, default='staging', null=True)
 
     def __str__(self):
         return self.script_name
@@ -45,7 +47,7 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
             scrapylog_name = instance.spider_name+"_"+str(timezone.now())
             )
         log.save()
-        command = 'cd {dir} && scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(dir=instance.project_dir, spider_name=instance.spider_name)
+        command = 'export SCRAPYER_ENV={env} && cd {dir} && scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(env=script.environment, dir=instance.project_dir, spider_name=instance.spider_name)
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
         if data.returncode == 0:
             log.success = True
@@ -61,4 +63,12 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
     if instance.run_script:
         t = Thread(target=__runtasks, args=(instance,), daemon=True)
         t.start()
+
+'''This for set environemnt as options select'''
+class ScrapyScriptForm(forms.ModelForm):
+    env_types = (
+        ('staging', 'staging'),
+        ('production', 'production'),
+    )
+    enviroment = forms.ChoiceField(choices=env_types)
         

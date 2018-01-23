@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import ScrapyScript, ScrapyLog
+from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm
 
 
 @admin.register(ScrapyScript)
 class ScrapyScriptAdmin(admin.ModelAdmin):
     list_display = ('id', 'script_name', 'project_name', 'spider_name')
+    form = ScrapyScriptForm
 
 @admin.register(ScrapyLog)
 class ScrapyLogAdmin(admin.ModelAdmin):

@@ -1,5 +1,6 @@
 __pycache__
 scrapmon/__pycache__
+scrapmon/__pycache__/*.pyc
 *.swp
 *.swo
 *.python-version
