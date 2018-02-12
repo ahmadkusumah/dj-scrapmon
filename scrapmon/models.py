@@ -57,7 +57,9 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
             command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
         else:
             command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new={sites_new} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
-
+        print('==================================')
+        print(command)
+        print('==================================')
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
 
         if data.returncode == 0:
