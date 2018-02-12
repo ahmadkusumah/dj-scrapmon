@@ -81,4 +81,5 @@ class ScrapyScriptForm(forms.ModelForm):
         ('production', 'production'),
     )
     enviroment = forms.ChoiceField(choices=env_types)
-        
+    sites_new = forms.CharField(widget=forms.Textarea, required=False)
+    virtualenv = forms.CharField(widget=forms.Textarea, required=False)
