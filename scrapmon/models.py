@@ -42,15 +42,7 @@ class ScrapyLog(models.Model):
 
 @receiver(post_save, sender=ScrapyScript)
 def scrapy_log_saved(sender, instance, created, **kwargs):
-    def __runtasks(instance):
-
-        log = ScrapyLog(
-            start = timezone.now(),
-            script = instance,
-            running = True,
-            scrapylog_name = instance.spider_name+"_"+str(timezone.now().strftime('%Y%m'))
-            )
-        log.save()
+    def __runtasks(instance, log):
 
         command = ''
         if instance.sites_new is None or not instance.sites_new.strip() :
@@ -73,7 +65,15 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
     
     if instance.run_script:
         # __runtasks(instance)
-        t = Thread(target=__runtasks, args=(instance,), daemon=True)
+        log = ScrapyLog(
+            start = timezone.now(),
+            script = instance,
+            running = True,
+            scrapylog_name = instance.spider_name+"_"+str(timezone.now().strftime('%Y%m'))
+            )
+        log.save()
+
+        t = Thread(target=__runtasks, args=(instance,log), daemon=True)
         t.start()
 
 '''This for set environemnt as options select'''
