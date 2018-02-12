@@ -43,7 +43,7 @@ class ScrapyLog(models.Model):
 @receiver(post_save, sender=ScrapyScript)
 def scrapy_log_saved(sender, instance, created, **kwargs):
     def __runtasks(instance):
-        subprocess.run('cd '+instance.project_dir+' && pip install -r ../requirements.txt', shell=True, check=False, stderr=PIPE, stdout=PIPE)
+
         log = ScrapyLog(
             start = timezone.now(),
             script = instance,
@@ -53,12 +53,13 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
         log.save()
 
         command = ''
-        if instance.sites_new is None:
-            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date="{start_date}" -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y%m%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
+        if instance.sites_new is None or not instance.sites_new.strip() :
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
         else:
-            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new="{sites_new}" -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y%m%d'), venv=instance.virtualenv)
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new={sites_new} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
 
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
+
         if data.returncode == 0:
             log.success = True
             log.running = False
@@ -71,6 +72,7 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
         log.save()
     
     if instance.run_script:
+        # __runtasks(instance)
         t = Thread(target=__runtasks, args=(instance,), daemon=True)
         t.start()
 
