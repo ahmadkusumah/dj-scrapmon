@@ -19,6 +19,7 @@ class ScrapyScript(models.Model):
     enviroment = models.CharField(max_length=250, default='staging', null=True)
     recreate = models.BooleanField(default=False)
     sites_new = models.TextField(default=None, null=True)
+    virtualenv = models.TextField(default=None, null=True)
 
 
     def __str__(self):
@@ -53,9 +54,9 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
 
         command = ''
         if instance.sites_new is None:
-            command = 'cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(env=script.environment, dir=instance.project_dir, spider_name=instance.spider_name)
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date="{start_date}" -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y%m%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
         else:
-            command = 'cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a sites_new={sites_new} -t csv --loglevel=INFO '.format(env=script.environment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new)
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new="{sites_new}" -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y%m%d'), venv=instance.virtualenv)
 
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
         if data.returncode == 0:

@@ -5,32 +5,25 @@ from celery.task import task
 from .models import ScrapyScript, ScrapyLog
 
 @task(ignore_result=True, max_retries=1)
-def execute_scrapy():
-    index = 0
-    for script in ScrapyScript.objects.all():
-        if index == 0:
-            prerequisite(script.project_dir)
+def execute_scrapy(command, script_id):
+    print("Command Line HEHEHEH %s :", command)
+    script = ScrapyScript.objects.get(pk = script_id)
+    log = ScrapyLog(
+        start = timezone.now(),
+        script = script,
+        running = True,
+        scrapylog_name = script.spider_name+"_"+str(timezone.now().strftime('%Y%m'))
+        )
+    log.save()
 
-        log = ScrapyLog(
-            start = timezone.now(),
-            script = script,
-            running = True,
-            scrapylog_name = script.spider_name+"_"+str(timezone.now())
-            )
-        log.save()
-        command = 'export SCRAPYER_ENV={env} && cd {dir} && scrapy crawl {spider_name} -t csv --loglevel=INFO '.format(env=script.environment, dir=script.project_dir, spider_name=script.spider_name)
-        data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
-        if data.returncode == 0:
-            log.success = True
-            log.running = False
-            log.traceback = data.stderr.splitlines()[-23:]+data.stdout.splitlines()[-23:]
-        else:
-            log.success = False
-            log.running = False
-            log.error_message = data.stderr.splitlines()[-50:]
-            log.traceback = data.stdout.splitlines()[-23:]
-        log.save()
-        index +=1
-
-def prerequisite(project_dir):
-    subprocess.run('cd '+project_dir+' && pip install -r ../requirements.txt', shell=True, check=False, stderr=PIPE, stdout=PIPE)
+    data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
+    if data.returncode == 0:
+        log.success = True
+        log.running = False
+        log.traceback = data.stderr.splitlines()[-23:]+data.stdout.splitlines()[-23:]
+    else:
+        log.success = False
+        log.running = False
+        log.error_message = data.stderr.splitlines()[-50:]
+        log.traceback = data.stdout.splitlines()[-23:]
+    log.save()
