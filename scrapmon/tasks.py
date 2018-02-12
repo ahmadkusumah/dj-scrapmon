@@ -16,7 +16,7 @@ def execute_scrapy(command, script_id):
         )
     log.save()
 
-    data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE)
+    data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE, executable='/bin/bash')
     if data.returncode == 0:
         log.success = True
         log.running = False
