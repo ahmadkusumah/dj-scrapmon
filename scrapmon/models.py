@@ -46,9 +46,9 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
 
         command = ''
         if instance.sites_new is None or not instance.sites_new.strip() :
-            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO --logfile=/var/apps/a/data-scrapyer/shared/log/{logfile}.log'.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv, logfile=instance.spider_name+instance.start.strftime('%Y%m'))
         else:
-            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new={sites_new} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv)
+            command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new={sites_new} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO --logfile=/var/apps/a/data-scrapyer/shared/log/{logfile}.log '.format(env=instance.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=instance.sites_new, recreate=instance.recreate, start_date=instance.start.strftime('%Y-%m-%d'), end_date=instance.end.strftime('%Y-%m-%d'), venv=instance.virtualenv, logfile=instance.spider_name+instance.start.strftime('%Y%m'))
 
         data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE, executable='/bin/bash')
 
@@ -69,7 +69,7 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
             start = timezone.now(),
             script = instance,
             running = True,
-            scrapylog_name = instance.spider_name+"_"+str(timezone.now().strftime('%Y%m'))
+            scrapylog_name = instance.spider_name+"_"+str(instance.start.strftime('%Y%m'))+"_"+str(timezone.now().strftime('%Y%m'))
             )
         log.save()
 

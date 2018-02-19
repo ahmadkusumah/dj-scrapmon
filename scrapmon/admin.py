@@ -16,4 +16,7 @@ class ScrapyLogAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def has_edit_permission(self, request):
+        return True
+
 
