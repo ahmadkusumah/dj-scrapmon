@@ -103,7 +103,7 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
                 start = timezone.now(),
                 script = instance,
                 running = True,
-                scrapylog_name = instance.spider_name+"_"+str(timezone.now().strftime('%Y%m'))
+                scrapylog_name = instance.spider_name+"_"+str(instance.start.strftime('%Y%m'))+"_"+str(timezone.now().strftime('%Y%m'))
                 )
             log.save()
 
