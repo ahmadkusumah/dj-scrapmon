@@ -103,7 +103,7 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
                 start = timezone.now(),
                 script = instance,
                 running = True,
-                scrapylog_name = instance.spider_name+"_"+str(instance.start.strftime('%Y%m'))+"_"+str(timezone.now().strftime('%Y%m'))
+                scrapylog_name = instance.spider_name+"_"+str(script.start.strftime('%Y%m'))+"_"+str(timezone.now().strftime('%Y%m'))
                 )
             log.save()
 
@@ -113,9 +113,6 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
             else:
                 command = '{venv} && cd {dir} && SCRAPYER_ENV={env} scrapy crawl {spider_name} -a recreate={recreate} -a sites_new={sites_new} -a start_date={start_date} -a end_date={end_date} -t csv --loglevel=INFO --logfile=/var/apps/a/data-scrapyer/shared/log/{logfile}.log '.format(env=script.enviroment, dir=instance.project_dir, spider_name=instance.spider_name, sites_new=script.sites_new, recreate=instance.recreate, start_date=script.start.strftime('%Y-%m-%d'), end_date=script.end.strftime('%Y-%m-%d'), venv=instance.virtualenv, logfile=instance.spider_name+script.start.strftime('%Y%m'))
 
-            print('=============================')
-            print(command)
-            print('=============================')
             data = subprocess.run(command, shell=True, check=False, stderr=PIPE, stdout=PIPE, executable='/bin/bash')
 
             if data.returncode == 0:
