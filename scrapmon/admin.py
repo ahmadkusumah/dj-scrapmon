@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm,  ScrapyerBatch, ScrapyerBatchScript
+from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm,  ScrapyerBatch, ScrapyerBatchScript, ScrapyerBatchForm
 
 
 @admin.register(ScrapyScript)
@@ -27,5 +27,6 @@ class ScrapyerBatchScriptInline(admin.StackedInline):
 @admin.register(ScrapyerBatch)
 class ScrapyerBatchAdmin(admin.ModelAdmin):
     inlines = [ScrapyerBatchScriptInline]
+    form = ScrapyerBatchForm
 
 

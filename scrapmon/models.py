@@ -139,3 +139,6 @@ class ScrapyScriptForm(forms.ModelForm):
     enviroment = forms.ChoiceField(choices=env_types)
     sites_new = forms.CharField(widget=forms.Textarea, required=False)
     virtualenv = forms.CharField(widget=forms.Textarea, required=False)
+
+class ScrapyerBatchForm(forms.ModelForm):
+    sites_new = forms.CharField(widget=forms.Textarea, required=False)
