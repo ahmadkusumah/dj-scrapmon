@@ -20,3 +20,12 @@ class ScrapyLogAdmin(admin.ModelAdmin):
         return True
 
 
+class ScrapyerBatchScriptInline(admin.StackedInline):
+    model = ScrapyerBatchScript
+    extra = 1
+
+@admin.register(ScrapyerBatch)
+class ScrapyerBatchAdmin(admin.ModelAdmin):
+    inlines = [ScrapyerBatchScriptInline]
+
+
