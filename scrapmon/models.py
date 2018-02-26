@@ -129,7 +129,7 @@ def scrapyer_batch_saved(sender, script, created, **kwargs):
             #     log.traceback = data.stdout.splitlines()[-23:]
             # log.save()
 
-    if instance.run_script:
+    if script.run_script:
         t = Thread(target=__runjob, args=(script), daemon=True)
         t.start()
 
