@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm
+from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm,  ScrapyerBatch, ScrapyerBatchScript
 
 
 @admin.register(ScrapyScript)
