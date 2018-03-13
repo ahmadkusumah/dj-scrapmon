@@ -4,7 +4,13 @@ from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm,  ScrapyerBatch, S
 
 @admin.register(ScrapyScript)
 class ScrapyScriptAdmin(admin.ModelAdmin):
-    list_display = ('id', 'script_name', 'project_name', 'spider_name')
+    def edit(self, obj):
+        return format_html('<a class="btn" href="/admin/scrapmon/scrapyscript/{}/change/">Change</a>', obj.id)
+
+    def delete(self, obj):
+        return format_html('<a class="btn" href="/admin/scrapmon/scrapyscript/{}/delete/">Delete</a>', obj.id)
+
+    list_display = ('id', 'script_name', 'project_name', 'spider_name','edit', 'delete')
     form = ScrapyScriptForm
 
 @admin.register(ScrapyLog)
@@ -26,6 +32,14 @@ class ScrapyerBatchScriptInline(admin.StackedInline):
 
 @admin.register(ScrapyerBatch)
 class ScrapyerBatchAdmin(admin.ModelAdmin):
+    def edit(self, obj):
+        return format_html('<a class="btn" href="/admin/scrapmon/scrapyerbatch/{}/change/">Change</a>', obj.id)
+
+    def delete(self, obj):
+        return format_html('<a class="btn" href="/admin/scrapmon/scrapyerbatch/{}/delete/">Delete</a>', obj.id)
+
+    list_display = ('batch_name','edit', 'delete')
+
     inlines = [ScrapyerBatchScriptInline]
     form = ScrapyerBatchForm
 

@@ -17,7 +17,7 @@ class ScrapyScript(models.Model):
     end = models.DateField()
     run_script = models.NullBooleanField(default=None)
     enviroment = models.CharField(max_length=250, default='staging', null=True)
-    recreate = models.BooleanField(default=False)
+    recreate = models.NullBooleanField("Overwrite Existing ?",default=False)
     sites_new = models.TextField(default=None, null=True)
     virtualenv = models.TextField(default=None, null=True)
 
@@ -139,6 +139,12 @@ class ScrapyScriptForm(forms.ModelForm):
     enviroment = forms.ChoiceField(choices=env_types)
     sites_new = forms.CharField(widget=forms.Textarea, required=False)
     virtualenv = forms.CharField(widget=forms.Textarea, required=False)
+
+    recreate_types = (
+        (False, False),
+        (True, True),
+    )
+    recreate = forms.ChoiceField(choices=recreate_types)
 
 class ScrapyerBatchForm(forms.ModelForm):
     sites_new = forms.CharField(widget=forms.Textarea, required=False)
