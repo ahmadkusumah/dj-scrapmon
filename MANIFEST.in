@@ -1,0 +1,2 @@
+include scrapmon/templates/*
+include scrapmon/templates/admin/*
