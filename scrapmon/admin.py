@@ -7,6 +7,12 @@ from django.contrib.auth.admin import UserAdmin
 
 @admin.register(ScrapyScript)
 class ScrapyScriptAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, changed):
+        if '_save' in request.POST:
+            obj.run_script = True
+        super(ScrapyScriptAdmin, self).save_model(request, obj, form, changed)
+
+    change_form_template = 'admin/custom_change_form.html'
     def edit(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyscript/{}/change/">Change</a>', obj.id)
 
