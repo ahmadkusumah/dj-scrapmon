@@ -144,7 +144,7 @@ class ScrapyScriptForm(forms.ModelForm):
         (False, False),
         (True, True),
     )
-    recreate = forms.ChoiceField(choices=recreate_types)
+    recreate = forms.ChoiceField(choices=recreate_types, label='Overwrite Existing?')
 
 class ScrapyerBatchForm(forms.ModelForm):
     sites_new = forms.CharField(widget=forms.Textarea, required=False)
