@@ -12,7 +12,8 @@ class ScrapyScriptAdmin(admin.ModelAdmin):
             obj.run_script = True
         super(ScrapyScriptAdmin, self).save_model(request, obj, form, changed)
 
-    change_form_template = 'admin/custom_change_form.html'
+    change_form_template = 'custom_change_form.html'
+    
     def edit(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyscript/{}/change/">Change</a>', obj.id)
 
