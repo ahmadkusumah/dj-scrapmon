@@ -50,7 +50,10 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'group')
 
     def group(self, obj):
-        return obj.groups
+        group_name = ''
+        for g in obj.groups.all():
+            group_name += g.name
+        return group_namegroups
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
