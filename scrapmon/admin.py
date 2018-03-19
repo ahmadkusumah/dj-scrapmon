@@ -53,7 +53,7 @@ class CustomUserAdmin(UserAdmin):
         group_name = ''
         for g in obj.groups.all():
             group_name += g.name
-        return group_namegroups
+        return group_name
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
