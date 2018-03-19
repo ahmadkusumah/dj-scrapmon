@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import ScrapyScript, ScrapyLog, ScrapyScriptForm,  ScrapyerBatch, ScrapyerBatchScript, ScrapyerBatchForm
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 
 
 @admin.register(ScrapyScript)
@@ -43,5 +45,14 @@ class ScrapyerBatchAdmin(admin.ModelAdmin):
 
     inlines = [ScrapyerBatchScriptInline]
     form = ScrapyerBatchForm
+
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'group')
+
+    def group(self, obj):
+        return obj.groups
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 
 
