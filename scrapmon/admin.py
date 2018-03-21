@@ -10,7 +10,12 @@ class ScrapyScriptAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, changed):
         if '_save' in request.POST:
             obj.run_script = True
+        else:
+            obj.run_script = False
+
         super(ScrapyScriptAdmin, self).save_model(request, obj, form, changed)
+
+        
 
     change_form_template = 'custom_change_form.html'
     
@@ -20,7 +25,7 @@ class ScrapyScriptAdmin(admin.ModelAdmin):
     def delete(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyscript/{}/delete/">Delete</a>', obj.id)
 
-    list_display = ('id', 'script_name', 'project_name', 'spider_name','edit', 'delete')
+    list_display = ('id', 'script_name', 'project_name', 'spider_name','edit')
     form = ScrapyScriptForm
 
 @admin.register(ScrapyLog)
@@ -42,13 +47,20 @@ class ScrapyerBatchScriptInline(admin.StackedInline):
 
 @admin.register(ScrapyerBatch)
 class ScrapyerBatchAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, changed):
+        if '_save' in request.POST:
+            obj.run_script = True
+        else:
+            obj.run_script = False
+        super(ScrapyerBatchAdmin, self).save_model(request, obj, form, changed)
+
     def edit(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyerbatch/{}/change/">Change</a>', obj.id)
 
     def delete(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyerbatch/{}/delete/">Delete</a>', obj.id)
 
-    list_display = ('batch_name','edit', 'delete')
+    list_display = ('batch_name','edit')
 
     inlines = [ScrapyerBatchScriptInline]
     form = ScrapyerBatchForm
