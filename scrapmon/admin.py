@@ -54,6 +54,8 @@ class ScrapyerBatchAdmin(admin.ModelAdmin):
             obj.run_script = False
         super(ScrapyerBatchAdmin, self).save_model(request, obj, form, changed)
 
+    change_form_template = 'custom_change_form.html'
+
     def edit(self, obj):
         return format_html('<a class="btn" href="/admin/scrapmon/scrapyerbatch/{}/change/">Change</a>', obj.id)
 
