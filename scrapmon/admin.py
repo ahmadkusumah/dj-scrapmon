@@ -30,7 +30,7 @@ class ScrapyScriptAdmin(admin.ModelAdmin):
 
 @admin.register(ScrapyLog)
 class ScrapyLogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'scrapylog_name', 'start', 'end', 'running', 'success', 'error_message', 'traceback')
+    list_display = ('id', 'scrapylog_name', 'start', 'end', 'running', 'success', 'error_message', 'traceback', 'created_by')
     list_filter = ['success', 'start']
 
     '''disable add, it will retrieve automatically'''
