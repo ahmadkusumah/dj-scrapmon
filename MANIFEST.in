@@ -1,2 +1,4 @@
 include scrapmon/templates/*
 include scrapmon/templates/admin/*
+include scrapmon/static/*
+include scrapmon/static/js/*

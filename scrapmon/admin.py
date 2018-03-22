@@ -45,6 +45,10 @@ class ScrapyerBatchScriptInline(admin.StackedInline):
     model = ScrapyerBatchScript
     extra = 1
 
+    ##hide some button
+    class Media:
+        js = ("js/custom_script.js",)
+
 @admin.register(ScrapyerBatch)
 class ScrapyerBatchAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, changed):

@@ -55,8 +55,8 @@ class ScrapyerBatch(models.Model):
         return self.batch_name
 
     class Meta:
-        verbose_name = "Scraper Batch"
-        verbose_name_plural = "Scrapyer Batches"
+        verbose_name = "Scrapyer batch"
+        verbose_name_plural = "Scrapyer batches"
 
 class ScrapyerBatchScript(models.Model):
     batch = models.ForeignKey(ScrapyerBatch, on_delete=models.CASCADE, related_name="batch_script")
@@ -79,12 +79,12 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
         if data.returncode == 0:
             log.success = True
             log.running = False
-            log.traceback = data.stderr.splitlines()[-50:]+data.stdout.splitlines()[-23:]
+            log.traceback = data.stderr.splitlines()[-10:]+data.stdout.splitlines()[-10:]
         else:
             log.success = False
             log.running = False
-            log.error_message = data.stderr.splitlines()[-50:]
-            log.traceback = data.stdout.splitlines()[-23:]
+            log.error_message = data.stderr.splitlines()[-10:]
+            log.traceback = data.stdout.splitlines()[-10:]
         log.save()
     
     if instance.run_script:
@@ -128,12 +128,12 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
             if data.returncode == 0:
                 log.success = True
                 log.running = False
-                log.traceback = data.stderr.splitlines()[-50:]+data.stdout.splitlines()[-23:]
+                log.traceback = data.stderr.splitlines()[-10:]+data.stdout.splitlines()[-10:]
             else:
                 log.success = False
                 log.running = False
-                log.error_message = data.stderr.splitlines()[-50:]
-                log.traceback = data.stdout.splitlines()[-23:]
+                log.error_message = data.stderr.splitlines()[-10:]
+                log.traceback = data.stdout.splitlines()[-10:]
             log.save()
 
     if instance.run_script:
