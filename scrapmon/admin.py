@@ -28,6 +28,10 @@ class ScrapyScriptAdmin(admin.ModelAdmin):
     list_display = ('id', 'script_name', 'project_name', 'spider_name','edit')
     form = ScrapyScriptForm
 
+    ##some button
+    class Media:
+        js = ("js/action_script.js",)
+
 @admin.register(ScrapyLog)
 class ScrapyLogAdmin(admin.ModelAdmin):
     list_display = ('id', 'scrapylog_name', 'start', 'end', 'running', 'success', 'error_message', 'traceback', 'created_by')
