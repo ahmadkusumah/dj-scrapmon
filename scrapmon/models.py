@@ -104,7 +104,7 @@ def scrapy_log_saved(sender, instance, created, **kwargs):
 @receiver(post_save, sender=ScrapyerBatch)
 def scrapyer_batch_saved(sender, instance, created, **kwargs):
 
-    def __runjob(script):
+    def __runjob(script, username):
         ## retrieve script
         for batch_script in ScrapyerBatchScript.objects.filter(batch=script).order_by('order'):
             instance = batch_script.script
@@ -113,7 +113,7 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
                 script = instance,
                 running = True,
                 scrapylog_name = instance.spider_name+"_"+str(script.start.strftime('%Y%m'))+"_"+str(timezone.now().strftime('%Y%m')),
-                created_by = get_current_user().username
+                created_by = username
                 )
             log.save()
 
@@ -140,7 +140,8 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
             # log.save()
 
     if instance.run_script:
-        t = Thread(target=__runjob, args=(instance,), daemon=True)
+        username = get_current_user().username
+        t = Thread(target=__runjob, args=(instance, username,), daemon=True)
         t.start()
 
 '''This for set environemnt as options select'''
