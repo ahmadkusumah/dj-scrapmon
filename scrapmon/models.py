@@ -140,9 +140,8 @@ def scrapyer_batch_saved(sender, instance, created, **kwargs):
             # log.save()
 
     if instance.run_script:
-        __runjob(instance)
-        # t = Thread(target=__runjob, args=(instance,), daemon=True)
-        # t.start()
+        t = Thread(target=__runjob, args=(instance,), daemon=True)
+        t.start()
 
 '''This for set environemnt as options select'''
 class ScrapyScriptForm(forms.ModelForm):
