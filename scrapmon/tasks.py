@@ -6,7 +6,7 @@ from .models import ScrapyScript, ScrapyLog
 
 @task(ignore_result=True, max_retries=1)
 def execute_scrapy(command, script_id):
-    print("Command Line HEHEHEH %s :", command)
+    print("Executing Command %s :", command)
     script = ScrapyScript.objects.get(pk = script_id)
     log = ScrapyLog(
         start = timezone.now(),
